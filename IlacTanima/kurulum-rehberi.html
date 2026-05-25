@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robot Sistemi — Tam Kurulum Rehberi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:    #1d4ed8;
+  --blue-l:  #3b82f6;
+  --green:   #059669;
+  --green-l: #10b981;
+  --red:     #dc2626;
+  --amber:   #d97706;
+  --purple:  #7c3aed;
+  --gray:    #374151;
+  --gray-l:  #6b7280;
+  --border:  #e5e7eb;
+  --bg:      #f9fafb;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #1f2937;
+  background: #fff;
+}
+
+/* ════════════════ KAPAK ════════════════ */
+.cover {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 45%, #0e7490 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  page-break-after: always;
+}
+.cover-top {
+  padding: 56px 60px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 30px;
+  padding: 6px 16px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+.cover h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+}
+.cover h1 span { color: #38bdf8; }
+.cover-sub {
+  font-size: 1.05rem;
+  color: #94a3b8;
+  margin-bottom: 44px;
+  font-weight: 400;
+}
+.hw-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 48px;
+}
+.hw-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+.hw-tag .dot { width:8px; height:8px; border-radius:50%; }
+.dot-blue   { background: #38bdf8; }
+.dot-green  { background: #4ade80; }
+.dot-amber  { background: #fbbf24; }
+.dot-purple { background: #a78bfa; }
+.dot-red    { background: #f87171; }
+
+/* Sistem diyagramı */
+.sys-diagram {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  line-height: 1.9;
+}
+.sys-diagram .hl { color: #38bdf8; }
+.sys-diagram .hl2 { color: #4ade80; }
+.sys-diagram .hl3 { color: #fbbf24; }
+.sys-diagram .hl4 { color: #a78bfa; }
+.sys-diagram .hl5 { color: #f87171; }
+
+.cover-bottom {
+  background: rgba(0,0,0,0.25);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 16px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* ════════════════ SAYFA ════════════════ */
+.page {
+  padding: 44px 56px;
+  page-break-after: always;
+  max-width: 100%;
+}
+.page:last-child { page-break-after: avoid; }
+
+/* Bölüm başlığı */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
+}
+.step-circle {
+  width: 46px; height: 46px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem; font-weight: 800;
+  flex-shrink: 0;
+}
+.sc-blue   { background: #dbeafe; color: var(--blue); }
+.sc-green  { background: #d1fae5; color: var(--green); }
+.sc-amber  { background: #fef3c7; color: var(--amber); }
+.sc-purple { background: #ede9fe; color: var(--purple); }
+.sc-red    { background: #fee2e2; color: var(--red); }
+.sc-gray   { background: #f3f4f6; color: var(--gray); }
+
+.sh-text h2 { font-size: 1.3rem; font-weight: 700; color: #111827; }
+.sh-text p  { font-size: 0.8rem; color: var(--gray-l); margin-top: 2px; }
+
+/* İki sütun */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+/* Kart */
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--gray-l);
+  margin-bottom: 10px;
+}
+
+/* Malzeme listesi */
+.material-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 18px;
+  font-size: 0.83rem;
+}
+.material-table thead th {
+  background: #1e3a8a;
+  color: #fff;
+  padding: 9px 14px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.material-table thead th:first-child { border-radius: 8px 0 0 0; }
+.material-table thead th:last-child  { border-radius: 0 8px 0 0; }
+.material-table td { padding: 9px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+.material-table tr:nth-child(even) td { background: #f9fafb; }
+.material-table .ok   { color: var(--green); font-weight: 600; }
+.material-table .warn { color: var(--amber); font-weight: 600; }
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+.pill-blue   { background: #dbeafe; color: #1d4ed8; }
+.pill-green  { background: #d1fae5; color: #065f46; }
+.pill-amber  { background: #fef3c7; color: #92400e; }
+.pill-purple { background: #ede9fe; color: #5b21b6; }
+
+/* Adım öğeleri */
+.step-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.step-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 11px 14px;
+}
+.step-item.important {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+.step-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-num.green  { background: var(--green); }
+.step-num.amber  { background: var(--amber); }
+.step-num.purple { background: var(--purple); }
+.step-num.red    { background: var(--red); }
+.step-body .label { font-weight: 700; font-size: 0.86rem; margin-bottom: 3px; }
+.step-body .detail { font-size: 0.8rem; color: #4b5563; line-height: 1.55; }
+
+/* Bağlantı şeması */
+.wiring-box {
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.73rem;
+  line-height: 2.0;
+  margin: 14px 0;
+  color: #94a3b8;
+}
+.wiring-box .pin-num  { color: #fbbf24; }
+.wiring-box .gpio     { color: #38bdf8; }
+.wiring-box .wire     { color: #4ade80; }
+.wiring-box .sensor   { color: #f87171; }
+.wiring-box .comment  { color: #374151; font-size: 0.68rem; }
+.wiring-box .section  { color: #a78bfa; font-weight: 600; }
+.wiring-box .arrow    { color: #fbbf24; }
+
+/* Kod bloğu */
+.code-block {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1.8;
+  margin: 10px 0;
+}
+.code-block .c  { color: #64748b; }
+.code-block .k  { color: #7dd3fc; }
+.code-block .v  { color: #86efac; }
+.code-block .s  { color: #fbbf24; }
+.code-block .p  { color: #f87171; }
+
+/* Uyarı kutuları */
+.alert {
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.82rem;
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  line-height: 1.55;
+}
+.alert-ico { font-size: 1.1rem; flex-shrink: 0; line-height: 1.3; }
+.alert-body strong { display: block; font-weight: 700; margin-bottom: 2px; }
+.alert.info    { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+.alert.success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; }
+.alert.warn    { background: #fffbeb; border: 1px solid #fde68a; color: #78350f; }
+.alert.danger  { background: #fef2f2; border: 1px solid #fecaca; color: #7f1d1d; }
+
+/* State machine */
+.state-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 14px 0;
+}
+.state-item {
+  display: flex;
+  gap: 0;
+}
+.state-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+  flex-shrink: 0;
+}
+.state-dot {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--blue);
+  background: #fff;
+  flex-shrink: 0;
+}
+.state-dot.active { background: var(--blue); }
+.state-connector {
+  width: 2px;
+  background: #bfdbfe;
+  flex: 1;
+  min-height: 16px;
+}
+.state-content {
+  padding: 0 0 16px 12px;
+  flex: 1;
+}
+.state-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 3px;
+}
+.state-desc {
+  font-size: 0.8rem;
+  color: #4b5563;
+}
+
+/* GPIO diyagramı */
+.gpio-diagram {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  margin: 14px 0;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.gpio-left  { padding: 6px 10px; text-align: right; color: #4b5563; }
+.gpio-right { padding: 6px 10px; text-align: left; color: #4b5563; }
+.gpio-pins  { background: #1e293b; padding: 4px 8px; }
+.gpio-pin-pair {
+  display: flex;
+  gap: 2px;
+  margin: 1px 0;
+  align-items: center;
+}
+.gpin {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.58rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.gpin-3v3   { background: #fef08a; color: #78350f; }
+.gpin-5v    { background: #fca5a5; color: #7f1d1d; }
+.gpin-gnd   { background: #1f2937; color: #9ca3af; border: 1px solid #374151; }
+.gpin-i2c   { background: #93c5fd; color: #1e3a8a; }
+.gpin-gpio  { background: #6ee7b7; color: #064e3b; }
+.gpin-empty { background: #374151; color: #6b7280; }
+.gpio-used-l { color: #1d4ed8; font-weight: 600; }
+.gpio-used-r { color: #1d4ed8; font-weight: 600; }
+.gpio-sda  { color: #f59e0b; font-weight: 600; }
+.gpio-gnd  { color: #6b7280; }
+.gpio-3v3  { color: #b45309; font-weight: 600; }
+
+/* Test sonuç kutusu */
+.test-output {
+  background: #0f172a;
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.85;
+  margin: 12px 0;
+  color: #94a3b8;
+}
+.test-output .ok   { color: #4ade80; }
+.test-output .err  { color: #f87171; }
+.test-output .info { color: #38bdf8; }
+.test-output .head { color: #fbbf24; font-weight: 600; }
+.test-output .dim  { color: #374151; }
+
+/* Sorun giderme tablosu */
+.trouble-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin: 12px 0; }
+.trouble-table th { background: #fef2f2; color: #7f1d1d; padding: 8px 12px; text-align: left; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid #fecaca; }
+.trouble-table td { padding: 10px 12px; border-bottom: 1px solid #fee2e2; vertical-align: top; }
+.trouble-table tr:nth-child(even) td { background: #fff5f5; }
+.trouble-table .symptom { font-weight: 600; color: #dc2626; }
+.trouble-table .fix { color: #374151; line-height: 1.55; }
+
+/* Config tablosu */
+.config-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin: 12px 0; }
+.config-table th { background: #1e1b4b; color: #c4b5fd; padding: 8px 12px; text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; }
+.config-table td { padding: 8px 12px; border-bottom: 1px solid #e5e7eb; font-family: 'JetBrains Mono', monospace; font-size: 0.77rem; }
+.config-table td:first-child { color: #7c3aed; }
+.config-table td:nth-child(2) { color: #059669; }
+.config-table tr:nth-child(even) td { background: #faf5ff; }
+
+/* Divider */
+hr.div { border: none; border-top: 1px solid #e5e7eb; margin: 18px 0; }
+
+/* Print */
+@media print {
+  body { font-size: 11.5px; }
+  .page { padding: 32px 44px; }
+  .cover-top { padding: 44px 48px 0; }
+}
+@page { size: A4; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════ KAPAK -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-badge">
+      <span>●</span> Robotik Kontrol Sistemi — Tam Kurulum Rehberi
+    </div>
+    <h1>Raspberry Pi 5<br><span>Robot Kol Sistemi</span></h1>
+    <p class="cover-sub">AI Kamera · ToF Mesafe Sensörleri · Arduino · Servo Kontrolü</p>
+
+    <div class="hw-tags">
+      <div class="hw-tag"><div class="dot dot-blue"></div> Raspberry Pi 5 (Ana Beyin)</div>
+      <div class="hw-tag"><div class="dot dot-green"></div> Pi AI Camera IMX500</div>
+      <div class="hw-tag"><div class="dot dot-amber"></div> 2× VL53L4CD ToF Sensör</div>
+      <div class="hw-tag"><div class="dot dot-purple"></div> Arduino (Servo Kontrolcü)</div>
+      <div class="hw-tag"><div class="dot dot-red"></div> Robot Kol + Gripper</div>
+    </div>
+
+    <div class="sys-diagram">
+<span class="hl">  AI KAMERA (IMX500)</span>  ──── görüntü ────►  <span class="hl2">RASPBERRY Pi 5</span>  ◄──── mesafe ────  <span class="hl3">SOL ToF</span><br>
+<span style="color:#374151">  "Parolun nerede?"</span>                      <span style="color:#374151">(Ana Beyin)</span>                                <span class="hl3">SAĞ ToF</span><br>
+<span style="color:#374151">                                             "Kutu sağda,</span><br>
+<span style="color:#374151">                                              5cm yaklaş,</span><br>
+<span style="color:#374151">                                              hizala, tut!"</span><br>
+<span style="color:#374151">                                                    │</span><br>
+<span style="color:#374151">                                            USB seri</span><br>
+<span style="color:#374151">                                                    │</span><br>
+<span style="color:#374151">                                                    ▼</span><br>
+<span class="hl4">                                           ARDUINO</span>  ──── açı komutları ────►  <span class="hl5">ROBOT KOL</span>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <span>Hazırlayan: myusufonur &nbsp;·&nbsp; 2025</span>
+    <span>Raspberry Pi 5 · Python 3 · FastAPI · picamera2</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ İÇİNDEKİLER -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-gray" style="font-size:1.3rem;">☰</div>
+    <div class="sh-text">
+      <h2>İçindekiler</h2>
+      <p>Bu rehber 9 bölümden oluşmaktadır, sırayla uygulayın</p>
+    </div>
+  </div>
+
+  <div class="two-col" style="gap:20px;">
+    <div>
+      <div class="card">
+        <div class="card-title">Donanım Kurulumu</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#dbeafe;color:#1d4ed8;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+            <div style="font-size:0.83rem;">Neye İhtiyacın Var? — Malzeme listesi</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#dbeafe;color:#1d4ed8;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+            <div style="font-size:0.83rem;">Pi İşletim Sistemi — Raspberry Pi Imager</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#dbeafe;color:#1d4ed8;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+            <div style="font-size:0.83rem;">Kamera Bağlantısı — CSI flex kablo</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#fef3c7;color:#d97706;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
+            <div style="font-size:0.83rem;">ToF Sensör Bağlantısı — GPIO + I2C</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#fef3c7;color:#d97706;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">5</div>
+            <div style="font-size:0.83rem;">Arduino Bağlantısı — USB seri haberleşme</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title">Yazılım Kurulumu</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#d1fae5;color:#065f46;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div>
+            <div style="font-size:0.83rem;">Pi Yazılım Kurulumu — Kütüphaneler</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#d1fae5;color:#065f46;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">7</div>
+            <div style="font-size:0.83rem;">Bileşen Testi — Her parçayı tek tek test et</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#ede9fe;color:#5b21b6;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">8</div>
+            <div style="font-size:0.83rem;">Tam Sistem Çalıştırma — State machine</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:26px;height:26px;border-radius:8px;background:#fee2e2;color:#dc2626;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">!</div>
+            <div style="font-size:0.83rem;">Sorun Giderme — Sık karşılaşılan hatalar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert info" style="margin-top:8px;">
+    <div class="alert-ico">ℹ️</div>
+    <div class="alert-body">
+      <strong>Önce oku, sonra yap</strong>
+      Her bölümü baştan sona oku, sonra uygulamaya geç. Bir adımı atlamayın — sıralama önemlidir. Bir yerde takılırsanız o bölümün numarasını ve hata mesajını not alın.
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <div class="card" style="background:#f0fdf4;border-color:#bbf7d0;">
+    <div class="card-title" style="color:#065f46;">Sistemin Kısaca Ne Yaptığı</div>
+    <div style="font-size:0.83rem;color:#1f2937;line-height:1.7;">
+      <strong>1.</strong> Pi, AI kameradan canlı görüntü alır.<br>
+      <strong>2.</strong> YOLO + OCR + barkod ile "Parol" kutusunu bulur ve görüntüdeki konumunu hesaplar.<br>
+      <strong>3.</strong> İki VL53L4CD ToF sensörü hedefe olan sol ve sağ mesafeyi milimetre hassasiyetle ölçer.<br>
+      <strong>4.</strong> Pi bu bilgileri değerlendirir: "Kutu sağda → sola dön", "Mesafe 200mm → 5cm daha yaklaş", "Sol-sağ fark 8mm → düzelt".<br>
+      <strong>5.</strong> Arduino'ya USB üzerinden servo komutları gönderir: <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;">3 110</code>, <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;">5 180</code>.<br>
+      <strong>6.</strong> Arduino servo'ları sürer → robot kol harekete geçer → gripper kapanır → kutu alınır.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 1 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-blue">1</div>
+    <div class="sh-text">
+      <h2>Neye İhtiyacın Var?</h2>
+      <p>Başlamadan önce aşağıdaki her malzemeyi hazırla</p>
+    </div>
+  </div>
+
+  <table class="material-table">
+    <thead>
+      <tr>
+        <th>Malzeme</th>
+        <th>Detay</th>
+        <th>Nereden?</th>
+        <th>Durum</th>
+      </tr>
+    </thead>
+    <tr>
+      <td><strong>Raspberry Pi 5</strong></td>
+      <td>4GB veya 8GB — fark etmez</td>
+      <td>—</td>
+      <td class="ok">✓ Mevcut</td>
+    </tr>
+    <tr>
+      <td><strong>Pi AI Camera (IMX500)</strong></td>
+      <td>Robotistan'dan alınan kamera</td>
+      <td>—</td>
+      <td class="ok">✓ Mevcut</td>
+    </tr>
+    <tr>
+      <td><strong>Kamera Flex Kablosu</strong></td>
+      <td>15-pin CSI, kamerayla gelmiş olmalı</td>
+      <td>—</td>
+      <td class="warn">☐ Kontrol et</td>
+    </tr>
+    <tr>
+      <td><strong>2× VL53L4CD ToF Sensör</strong></td>
+      <td>I2C, 3.3V — Adafruit breakout veya muadil</td>
+      <td>Robotistan / Direnc.net</td>
+      <td class="warn">☐ Satın al</td>
+    </tr>
+    <tr>
+      <td><strong>MicroSD Kart</strong></td>
+      <td>Min. 32GB, Class 10 / A1</td>
+      <td>Market / online</td>
+      <td class="warn">☐ Hazırla</td>
+    </tr>
+    <tr>
+      <td><strong>Pi Güç Adaptörü</strong></td>
+      <td>USB-C, 5V / 5A — Pi 5 için özel</td>
+      <td>Raspberry Pi resmi</td>
+      <td class="warn">☐ Kontrol et</td>
+    </tr>
+    <tr>
+      <td><strong>Arduino (Uno / Mega)</strong></td>
+      <td>Robot kolunla birlikte gelmiş olmalı</td>
+      <td>—</td>
+      <td class="ok">✓ Mevcut</td>
+    </tr>
+    <tr>
+      <td><strong>USB-A → USB-B Kablo</strong></td>
+      <td>Pi'den Arduino'ya — standart printer kablosu</td>
+      <td>—</td>
+      <td class="warn">☐ Hazırla</td>
+    </tr>
+    <tr>
+      <td><strong>Breadboard</strong></td>
+      <td>ToF sensörleri için — küçük boy yeterli</td>
+      <td>Direnc.net</td>
+      <td class="warn">☐ Hazırla</td>
+    </tr>
+    <tr>
+      <td><strong>Dupont Kablo (Dişi-Dişi)</strong></td>
+      <td>GPIO → breadboard için — ~15 adet</td>
+      <td>Direnc.net</td>
+      <td class="warn">☐ Hazırla</td>
+    </tr>
+    <tr>
+      <td><strong>Windows Bilgisayar</strong></td>
+      <td>Kurulum ve dosya transferi için</td>
+      <td>—</td>
+      <td class="ok">✓ Mevcut</td>
+    </tr>
+  </table>
+
+  <div class="alert danger">
+    <div class="alert-ico">⚡</div>
+    <div class="alert-body">
+      <strong>Pi 5 güç adaptörü önemli!</strong>
+      Normal telefon şarjı Pi 5'e yetmez. Mutlaka 5V / 5A USB-C adaptör kullan. Yetersiz güçte Pi kararsız çalışır, sensörler yanlış okuyabilir.
+    </div>
+  </div>
+
+  <div class="alert info">
+    <div class="alert-ico">💡</div>
+    <div class="alert-body">
+      <strong>Monitör, klavye, fare gerekmez</strong>
+      Tüm kurulum Wi-Fi üzerinden uzaktan (SSH) yapılır. Pi'ye ekran bağlamana gerek yok.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 2 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-blue">2</div>
+    <div class="sh-text">
+      <h2>Pi'ye İşletim Sistemi Kur</h2>
+      <p>MicroSD karta Raspberry Pi OS yazılacak — yaklaşık 10 dakika</p>
+    </div>
+  </div>
+
+  <div class="alert info">
+    <div class="alert-ico">📥</div>
+    <div class="alert-body">
+      <strong>Önce Raspberry Pi Imager'ı indir ve kur</strong>
+      Adres: <strong>raspberrypi.com/software</strong> → "Download for Windows" butonuna tıkla → Kur → Aç
+    </div>
+  </div>
+
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="label">MicroSD kartı bilgisayara tak</div>
+        <div class="detail">Kart okuyucuya koy, USB'ye tak. Windows'ta E: veya F: gibi görünür.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="label">Raspberry Pi Imager'ı aç — üç şeyi seç</div>
+        <div class="detail">
+          <span class="pill pill-blue">Device</span> &nbsp;Raspberry Pi 5 &nbsp;&nbsp;
+          <span class="pill pill-green">OS</span> &nbsp;Raspberry Pi OS (64-bit) &nbsp;&nbsp;
+          <span class="pill pill-amber">Storage</span> &nbsp;MicroSD kartın
+        </div>
+      </div>
+    </div>
+    <div class="step-item important">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="label">"Next" demeden önce — Ayarları gir (ÇOK ÖNEMLİ)</div>
+        <div class="detail">Sağ altta çıkan <strong>"Edit Settings"</strong> düğmesine tıkla, aşağıdaki bilgileri gir:</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="s">Hostname   :</span> <span class="v">pi5</span><br>
+<span class="s">Username   :</span> <span class="v">pi</span><br>
+<span class="s">Password   :</span> <span class="v">kendi şifreni yaz  (NOT ET — tekrar lazım olacak)</span><br>
+<span class="s">Wi-Fi SSID :</span> <span class="v">evin Wi-Fi adı  (telefondaki isim)</span><br>
+<span class="s">Wi-Fi Şifre:</span> <span class="v">Wi-Fi şifren  (büyük/küçük harf önemli!)</span><br>
+<span class="s">SSH        :</span> <span class="v">Etkinleştir → "Use password authentication"</span>
+  </div>
+
+  <div class="step-list" style="margin-top:12px;">
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="label">"Save" → "Yes" → Onaya bas → Bekle</div>
+        <div class="detail">5–10 dakika sürer. Kopyalama bitince MicroSD kartı çıkar.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num green">5</div>
+      <div class="step-body">
+        <div class="label">MicroSD'yi Pi'nin altına tak, güç ver</div>
+        <div class="detail">İlk açılış 2–3 dakika sürebilir. Pi Wi-Fi'a otomatik bağlanır. <strong>Acele etme.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <div class="two-col">
+    <div>
+      <div class="card" style="background:#fef2f2;border-color:#fecaca;margin-bottom:0;">
+        <div class="card-title" style="color:#dc2626;">Pi'nin IP'sini Bul</div>
+        <div style="font-size:0.8rem;margin-bottom:8px;">Windows Komut İstemi'nde:</div>
+        <div class="code-block" style="margin:0;padding:10px 14px;">
+          <span class="k">ping</span> <span class="v">pi5.local</span>
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-top:8px;">
+          Cevap gelince çıkan IP'yi not al:<br>
+          <code style="background:#fee2e2;padding:2px 6px;border-radius:3px;font-size:0.75rem;">Reply from 192.168.1.47</code>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="background:#f0fdf4;border-color:#bbf7d0;margin-bottom:0;">
+        <div class="card-title" style="color:#065f46;">PuTTY ile Bağlan (SSH)</div>
+        <div style="font-size:0.78rem;margin-bottom:6px;">PuTTY'yi <strong>putty.org</strong>'dan indir:</div>
+        <div class="code-block" style="margin:0;padding:10px 14px;">
+          <span class="s">Host:</span> <span class="v">pi5.local</span><br>
+          <span class="s">Port:</span> <span class="v">22</span><br>
+          <span class="s">User:</span> <span class="v">pi</span>  <span class="p">şifreni yaz</span>
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-top:8px;">
+          Siyah terminal ekranı = Pi'ye bağlandın!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 3 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-blue">3</div>
+    <div class="sh-text">
+      <h2>Kamerayı Fiziksel Bağla</h2>
+      <p>AI Camera (IMX500) CSI flex kablo ile Pi'ye bağlanır</p>
+    </div>
+  </div>
+
+  <div class="alert danger">
+    <div class="alert-ico">🔴</div>
+    <div class="alert-body">
+      <strong>Önce Pi'yi tamamen kapat, güç kablosunu çek!</strong>
+      Güç takılıyken kamera bağlamak Pi'ye ve kameraya zarar verebilir.
+    </div>
+  </div>
+
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num red">1</div>
+      <div class="step-body">
+        <div class="label">Pi'yi kapat ve güç kablosunu çek</div>
+        <div class="detail">Güç ışığı sönene kadar bekle.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="label">Pi üzerindeki "CAM/DISP 0" girişini bul</div>
+        <div class="detail">Pi 5'te iki kamera girişi var — küçük siyah klipsli konnektörler. <strong>"CAM/DISP 0"</strong> yazan birini kullan (soldaki).</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="label">Klipsi hafifçe yukarı kaldır</div>
+        <div class="detail">Konnektörün üstündeki siyah klipsi tırnağınla hafifçe kaldır. Zorla çekme, kırılabilir.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="label">Flex kabloyu tak — mavi/metalik taraf DIŞA bakacak</div>
+        <div class="detail">Kabloyu düzgünce sok. Klipsi aşağı bas — <strong>"tık"</strong> sesi duyulmalı. Kablo dışarı çekilemiyor olmalı.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num green">5</div>
+      <div class="step-body">
+        <div class="label">Güç ver — kamera otomatik tanınır</div>
+        <div class="detail">Sürücü kurman gerekmez. Pi OS kamerayı otomatik bulur.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert success" style="margin-top:4px;">
+    <div class="alert-ico">✅</div>
+    <div class="alert-body">
+      <strong>Kamera doğru bağlandı mı kontrol et</strong>
+      PuTTY'de şunu yaz: &nbsp;<code style="background:#dcfce7;padding:2px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;">libcamera-hello --list-cameras</code><br>
+      <code style="background:#dcfce7;padding:2px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;">Available cameras</code> yazısı çıkıyorsa kamera tanındı demektir.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 4 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-amber">4</div>
+    <div class="sh-text">
+      <h2>ToF Sensör Bağlantısı</h2>
+      <p>İki VL53L4CD sensörü breadboard üzerinden Pi GPIO'ya bağlanır</p>
+    </div>
+  </div>
+
+  <div class="alert warn">
+    <div class="alert-ico">⚠️</div>
+    <div class="alert-body">
+      <strong>İki sensörün I2C adresi aynı — bu normal, çözümü var</strong>
+      İki VL53L4CD fabrikadan aynı adresle (0x29) çıkar. XSHUT pini ile sırayla açılıp farklı adresler verilir. Bağlantı diyagramındaki XSHUT pinleri <strong>kritik</strong>.
+    </div>
+  </div>
+
+  <div class="card-title" style="margin-bottom:10px;">Pi GPIO → Sensör Bağlantı Diyagramı</div>
+
+  <div class="wiring-box">
+<span class="section">─── Pi GPIO Başlığı (40 pin) ───────────────────────────────</span><br>
+<br>
+<span class="comment">         Sol taraf             Sağ taraf</span><br>
+    <span class="pin-num"> Pin 1</span> <span class="gpio">3.3V</span>  ──────────────────────────── <span class="sensor">SOL ToF</span> <span class="wire">VDD</span><br>
+    <span class="pin-num"> Pin 3</span> <span class="gpio">SDA (GPIO2)</span>  ─────────────────── <span class="sensor">SOL ToF</span> <span class="wire">SDA</span>  <span class="comment">← İKİSİ DE AYNI PİNE</span><br>
+    <span class="pin-num"> Pin 5</span> <span class="gpio">SCL (GPIO3)</span>  ─────────────────── <span class="sensor">SOL ToF</span> <span class="wire">SCL</span>  <span class="comment">← İKİSİ DE AYNI PİNE</span><br>
+    <span class="pin-num"> Pin 6</span> <span class="gpio">GND</span>  ──────────────────────────── <span class="sensor">SOL ToF</span> <span class="wire">GND</span><br>
+    <span class="pin-num">Pin 11</span> <span class="gpio">GPIO17</span>  ────────────────────── <span class="sensor">SOL ToF</span> <span class="wire">XSHUT</span> <span class="comment">← SADECE SOL</span><br>
+<br>
+    <span class="pin-num">Pin 17</span> <span class="gpio">3.3V</span>  ──────────────────────────── <span class="sensor">SAĞ ToF</span> <span class="wire">VDD</span><br>
+    <span class="pin-num"> Pin 3</span> <span class="gpio">SDA (GPIO2)</span>  ─────────────────── <span class="sensor">SAĞ ToF</span> <span class="wire">SDA</span>  <span class="comment">← AYNI PİN (paylaşılır)</span><br>
+    <span class="pin-num"> Pin 5</span> <span class="gpio">SCL (GPIO3)</span>  ─────────────────── <span class="sensor">SAĞ ToF</span> <span class="wire">SCL</span>  <span class="comment">← AYNI PİN (paylaşılır)</span><br>
+    <span class="pin-num">Pin 14</span> <span class="gpio">GND</span>  ──────────────────────────── <span class="sensor">SAĞ ToF</span> <span class="wire">GND</span><br>
+    <span class="pin-num">Pin 13</span> <span class="gpio">GPIO27</span>  ────────────────────── <span class="sensor">SAĞ ToF</span> <span class="wire">XSHUT</span> <span class="comment">← SADECE SAĞ</span><br>
+<br>
+<span class="section">─── Breadboard düzeni ──────────────────────────────────────</span><br>
+<br>
+<span class="comment">  Pi Pin 1  (3.3V) ─── breadboard güç rayı (+) ─┬─ SOL ToF VDD</span><br>
+<span class="comment">  Pi Pin 17 (3.3V) ──────────────────────────────┘</span><br>
+<span class="comment">  Pi Pin 6  (GND)  ─── breadboard güç rayı (-) ─── Her iki ToF GND</span><br>
+<span class="comment">  Pi Pin 3  (SDA)  ─── breadboard orta ─────────── Her iki ToF SDA</span><br>
+<span class="comment">  Pi Pin 5  (SCL)  ─── breadboard orta ─────────── Her iki ToF SCL</span><br>
+<span class="comment">  Pi Pin 11 (GPIO17) ─ tek kablo ───────────────── SOL ToF XSHUT</span><br>
+<span class="comment">  Pi Pin 13 (GPIO27) ─ tek kablo ───────────────── SAĞ ToF XSHUT</span>
+  </div>
+
+  <div class="two-col" style="margin-top:14px;">
+    <div class="alert info" style="margin:0;">
+      <div class="alert-ico">💡</div>
+      <div class="alert-body">
+        <strong>SDA ve SCL neden paylaşılıyor?</strong>
+        I2C protokolü aynı hat üzerinde birden fazla cihaz destekler. Adres farkı olunca Pi istediği cihazla konuşabilir.
+      </div>
+    </div>
+    <div class="alert warn" style="margin:0;">
+      <div class="alert-ico">🔧</div>
+      <div class="alert-body">
+        <strong>XSHUT neden ayrı?</strong>
+        Kod başlarken ikisini de kapatır, sırayla açar, adresini değiştirir. Böylece 0x29 → 0x30 ve 0x31 olur.
+      </div>
+    </div>
+  </div>
+
+  <div class="alert success" style="margin-top:14px;">
+    <div class="alert-ico">✅</div>
+    <div class="alert-body">
+      <strong>Bağlantı doğrulama (PuTTY'de):</strong>
+      <div class="code-block" style="margin:6px 0 0;padding:10px 14px;background:#0f172a;">
+        <span style="color:#fbbf24;">sudo i2cdetect -y 1</span>
+      </div>
+      Sensörler bağlıysa <code style="background:#dcfce7;padding:1px 5px;border-radius:3px;">29</code> görünür. Kod çalışınca <code style="background:#dcfce7;padding:1px 5px;border-radius:3px;">30</code> ve <code style="background:#dcfce7;padding:1px 5px;border-radius:3px;">31</code>'e dönüşür.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 5 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-amber">5</div>
+    <div class="sh-text">
+      <h2>Arduino Bağlantısı</h2>
+      <p>Pi ve Arduino USB kablosuyla bağlanır — güç + veri tek kablo</p>
+    </div>
+  </div>
+
+  <div class="card" style="background:#f0fdf4;border-color:#bbf7d0;">
+    <div class="card-title" style="color:#065f46;">Bağlantı Bu Kadar Basit</div>
+    <div class="wiring-box" style="margin:0;border-radius:8px;">
+<span class="gpio">Raspberry Pi 5</span>   USB-A portu<br>
+         <span class="arrow">          │</span><br>
+         <span class="arrow">     USB kablosu</span>  <span class="comment">(standart printer kablosu / USB-A → USB-B)</span><br>
+         <span class="arrow">          │</span><br>
+<span class="sensor">Arduino Uno/Mega</span>   USB-B portu
+    </div>
+  </div>
+
+  <div style="height:14px;"></div>
+
+  <div class="card-title">Arduino'ya Gönderilen Komutlar</div>
+  <div class="code-block">
+<span class="c"># Pi'den Arduino'ya şu komutlar gönderilir:</span><br>
+<br>
+<span class="v">"1 90"</span>    <span class="c">→ Servo 1'i 90 dereceye götür</span><br>
+<span class="v">"2 120"</span>   <span class="c">→ Servo 2'yi 120 dereceye götür</span><br>
+<span class="v">"3 60"</span>    <span class="c">→ Servo 3'ü 60 dereceye götür (yaklaşma)</span><br>
+<span class="v">"5 180"</span>   <span class="c">→ Gripper kapat (servo 5)</span><br>
+<span class="v">"5 0"</span>     <span class="c">→ Gripper aç</span><br>
+<span class="v">"home"</span>    <span class="c">→ Tüm servolar başlangıç pozisyonuna</span><br>
+<span class="v">"show"</span>    <span class="c">→ Arduino mevcut açıları geri gönderir</span>
+  </div>
+
+  <div class="alert warn" style="margin-top:8px;">
+    <div class="alert-ico">⚙️</div>
+    <div class="alert-body">
+      <strong>Servo numaraları Arduino kodunuza göre değişir!</strong>
+      <code>robot/config_robot.py</code> dosyasında şu satırları kendi robot kolunun servo sıralamasına göre düzenle:
+      <div class="code-block" style="margin:6px 0 0;padding:10px 14px;">
+        <span style="color:#a78bfa;">SERVO_BASE</span>     = <span style="color:#86efac;">1</span>   <span style="color:#374151;"># Yatay dönüş (sol-sağ)</span><br>
+        <span style="color:#a78bfa;">SERVO_SHOULDER</span> = <span style="color:#86efac;">2</span>   <span style="color:#374151;"># Omuz (yukarı-aşağı)</span><br>
+        <span style="color:#a78bfa;">SERVO_ELBOW</span>    = <span style="color:#86efac;">3</span>   <span style="color:#374151;"># Dirsek (ileri-geri yaklaşma)</span><br>
+        <span style="color:#a78bfa;">SERVO_GRIPPER</span>  = <span style="color:#86efac;">5</span>   <span style="color:#374151;"># Tutucu</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert success">
+    <div class="alert-ico">✅</div>
+    <div class="alert-body">
+      <strong>Arduino port kontrolü (PuTTY'de):</strong>
+      <div class="code-block" style="margin:6px 0 0;padding:10px 14px;background:#0f172a;">
+        <span style="color:#fbbf24;">ls /dev/ttyACM* /dev/ttyUSB*</span>
+      </div>
+      <code style="background:#dcfce7;padding:1px 5px;border-radius:3px;">/dev/ttyACM0</code> veya <code style="background:#dcfce7;padding:1px 5px;border-radius:3px;">/dev/ttyUSB0</code> görünüyorsa Arduino tanınmış demektir.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 6 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-green">6</div>
+    <div class="sh-text">
+      <h2>Pi Yazılım Kurulumu</h2>
+      <p>PuTTY terminal penceresine sırayla yaz — ~15 dakika</p>
+    </div>
+  </div>
+
+  <div class="card-title">Adım 1 — Sistemi Güncelle</div>
+  <div class="code-block">
+<span class="k">sudo apt update && sudo apt upgrade -y</span>
+  </div>
+
+  <div class="card-title" style="margin-top:14px;">Adım 2 — Sistem Paketlerini Kur</div>
+  <div class="code-block">
+<span class="k">sudo apt install -y</span> <span class="v">\</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">python3-picamera2</span> <span class="c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Kamera kütüphanesi</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">python3-pip</span> <span class="c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Python paket yükleyici</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">python3-venv</span> <span class="c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Sanal ortam</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">python3-smbus</span> <span class="c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# I2C kütüphanesi</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">i2c-tools</span> <span class="c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# i2cdetect komutu</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">libzbar0</span> <span class="c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Barkod okuma</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">imx500-all</span> <span class="c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# IMX500 firmware</span>
+  </div>
+
+  <div class="card-title" style="margin-top:14px;">Adım 3 — I2C'yi Etkinleştir</div>
+  <div class="code-block">
+<span class="k">sudo raspi-config</span>
+  </div>
+  <div style="font-size:0.8rem;color:#374151;margin:6px 0 14px;padding:0 4px;">
+    Açılan menüde: &nbsp;<strong>Interface Options</strong> → <strong>I2C</strong> → <strong>Yes</strong> (Etkinleştir) → <strong>Finish</strong>
+  </div>
+
+  <div class="card-title">Adım 4 — Proje Dizinine Geç ve Python Ortamını Kur</div>
+  <div class="code-block">
+<span class="c"># Proje dizinine git</span><br>
+<span class="k">cd /home/pi/ilac-tanima/IlacTanima</span><br>
+<br>
+<span class="c"># Sanal ortam oluştur (system-site-packages: picamera2 için)</span><br>
+<span class="k">python3 -m venv --system-site-packages venv</span><br>
+<span class="k">source venv/bin/activate</span><br>
+<br>
+<span class="c"># Python paketleri</span><br>
+<span class="k">pip install --upgrade pip</span><br>
+<span class="k">pip install -r requirements_pi.txt</span><br>
+<br>
+<span class="c"># ToF sensör kütüphanesi</span><br>
+<span class="k">pip install adafruit-circuitpython-vl53l4cd</span><br>
+<br>
+<span class="c"># Seri port kütüphanesi (Arduino için)</span><br>
+<span class="k">pip install pyserial</span>
+  </div>
+
+  <div class="card-title" style="margin-top:14px;">Adım 5 — Kullanıcıya I2C ve Seri Port İzni Ver</div>
+  <div class="code-block">
+<span class="k">sudo usermod -aG i2c,dialout pi</span><br>
+<span class="k">sudo reboot</span>  <span class="c"># İzinlerin geçerli olması için yeniden başlat</span>
+  </div>
+
+  <div class="alert info" style="margin-top:8px;">
+    <div class="alert-ico">⏱️</div>
+    <div class="alert-body">
+      <strong>Reboot sonrası</strong> Pi 30–40 saniyede açılır. PuTTY'de tekrar bağlan, <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">source venv/bin/activate</code> yaz, sonra testlere geç.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 7 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-green">7</div>
+    <div class="sh-text">
+      <h2>Bileşen Testi</h2>
+      <p>Her parçayı tek tek test et — hepsinin çalıştığından emin ol</p>
+    </div>
+  </div>
+
+  <div class="alert info">
+    <div class="alert-ico">📌</div>
+    <div class="alert-body">
+      <strong>Önce proje dizinine git ve venv'i aktif et:</strong>
+      <div class="code-block" style="margin:6px 0 0;padding:10px 14px;background:#0f172a;">
+        <span style="color:#38bdf8;">cd /home/pi/ilac-tanima/IlacTanima</span><br>
+        <span style="color:#38bdf8;">source venv/bin/activate</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-title" style="margin-top:16px;">Hepsini Tek Komutla Test Et</div>
+  <div class="code-block">
+<span class="k">python -m robot.main_controller --test</span>
+  </div>
+
+  <div class="card-title" style="margin-top:14px;">Beklenen Çıktı:</div>
+  <div class="test-output">
+<span class="head">=== BİLEŞEN TESTİ ===</span><br>
+<br>
+<span class="info">[1] Arduino testi...</span><br>
+<span class="dim">    home komutu gönderiliyor...</span>    <span class="dim">&larr; robot kol home'a gider</span><br>
+<span class="dim">    Servo 1 → 45°</span>                  <span class="dim">&larr; ilk servo hareket eder</span><br>
+<span class="dim">    Servo 1 → 90°</span>                  <span class="dim">&larr; geri döner</span><br>
+<span class="dim">    Gripper kapat → aç</span>             <span class="dim">&larr; tutucu açılıp kapanır</span><br>
+<span class="ok">    ✓ Arduino OK</span><br>
+<br>
+<span class="info">[2] ToF sensör testi (5 okuma)...</span><br>
+<span class="dim">    [1] sol=234mm  sağ=241mm  hizalama=-7mm</span><br>
+<span class="dim">    [2] sol=235mm  sağ=239mm  hizalama=-4mm</span><br>
+<span class="dim">    [3] sol=236mm  sağ=238mm  hizalama=-2mm</span><br>
+<span class="dim">    [4] sol=235mm  sağ=236mm  hizalama=-1mm</span><br>
+<span class="dim">    [5] sol=234mm  sağ=234mm  hizalama=0mm</span><br>
+<span class="ok">    ✓ ToF OK</span><br>
+<br>
+<span class="info">[3] Kamera + tespit testi (10 frame)...</span><br>
+<span class="dim">    [1] bulunamadı</span>                  <span class="dim">&larr; kameraya henüz ilaç tutulmadı</span><br>
+<span class="dim">    [2] bulunamadı</span><br>
+<span class="dim">    [3] BULUNDU güven=87%  hata_x=-0.12</span>  <span class="dim">&larr; ilaç kameraya tutulunca</span><br>
+<span class="dim">    [4] BULUNDU güven=91%  hata_x=-0.04</span><br>
+<span class="ok">    ✓ Kamera OK</span><br>
+<br>
+<span class="head">=== TEST TAMAMLANDI ===</span>
+  </div>
+
+  <div class="two-col" style="margin-top:12px;gap:12px;">
+    <div class="alert danger" style="margin:0;">
+      <div class="alert-ico">❌</div>
+      <div class="alert-body" style="font-size:0.78rem;">
+        <strong>Arduino HATA çıkıyorsa</strong><br>
+        USB kablosu takılı mı?<br>
+        <code style="background:#fee2e2;padding:1px 4px;border-radius:3px;font-size:0.72rem;">ls /dev/ttyACM*</code> ne diyor?
+      </div>
+    </div>
+    <div class="alert danger" style="margin:0;">
+      <div class="alert-ico">❌</div>
+      <div class="alert-body" style="font-size:0.78rem;">
+        <strong>ToF HATA çıkıyorsa</strong><br>
+        SDA/SCL kabloları doğru pin'de mi?<br>
+        <code style="background:#fee2e2;padding:1px 4px;border-radius:3px;font-size:0.72rem;">sudo i2cdetect -y 1</code> ne diyor?
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 8 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-purple">8</div>
+    <div class="sh-text">
+      <h2>Tam Sistem Çalıştırma</h2>
+      <p>State machine — sistemin adım adım ne yaptığı</p>
+    </div>
+  </div>
+
+  <div class="code-block" style="margin-bottom:16px;">
+<span class="k">python -m robot.main_controller</span>
+  </div>
+
+  <div class="state-flow">
+    <div class="state-item">
+      <div class="state-line">
+        <div class="state-dot active"></div>
+        <div class="state-connector"></div>
+      </div>
+      <div class="state-content">
+        <div class="state-name">SEARCHING — Arıyor</div>
+        <div class="state-desc">Kamera her frame'de "Parol" kutusunu arıyor. Sen kutuyu kameraya tutana kadar bu durumda kalır. Barkod, YOLO veya OCR ile tespit eder.</div>
+      </div>
+    </div>
+    <div class="state-item">
+      <div class="state-line">
+        <div class="state-dot active"></div>
+        <div class="state-connector"></div>
+      </div>
+      <div class="state-content">
+        <div class="state-name">CENTERING — Merkezleme</div>
+        <div class="state-desc">Kutu kameranın sağında veya solundaysa base servo (yatay dönüş) küçük adımlarla döner. Kutu kameranın ortasına (%±8 tolerans) gelince bir sonraki aşama.</div>
+      </div>
+    </div>
+    <div class="state-item">
+      <div class="state-line">
+        <div class="state-dot active"></div>
+        <div class="state-connector"></div>
+      </div>
+      <div class="state-content">
+        <div class="state-name">APPROACHING — Yaklaşma</div>
+        <div class="state-desc">İki ToF sensörün ortalaması okunur. Hedef mesafe (varsayılan 80mm) dolana kadar elbow servo ileri gider. Her adımda mesafe tekrar kontrol edilir.</div>
+      </div>
+    </div>
+    <div class="state-item">
+      <div class="state-line">
+        <div class="state-dot active"></div>
+        <div class="state-connector"></div>
+      </div>
+      <div class="state-content">
+        <div class="state-name">ALIGNING — Hizalama</div>
+        <div class="state-desc">Sol ToF 78mm, Sağ ToF 92mm → robot kutuya eğik bakıyor. Base servo küçük düzeltme yapar, iki değer ±5mm'ye gelene kadar devam eder. En hassas aşama.</div>
+      </div>
+    </div>
+    <div class="state-item">
+      <div class="state-line">
+        <div class="state-dot active" style="border-color:#059669;background:#059669;"></div>
+        <div class="state-connector" style="visibility:hidden;"></div>
+      </div>
+      <div class="state-content" style="padding-bottom:0;">
+        <div class="state-name" style="color:#059669;">GRIPPING — Tutma ✓</div>
+        <div class="state-desc">Gripper kapatılır, kutu alınır. Robot kol home pozisyonuna döner. Görev tamamlandı.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <div class="card-title">Terminal Çıktısı (gerçek çalışma):</div>
+  <div class="test-output">
+<span class="dim">2025-01-15 10:23:41 [INFO      ] Sistem hazır. Hedef: Parol</span><br>
+<span class="dim">2025-01-15 10:23:41 [INFO      ] Durum: SEARCHING → SEARCHING</span><br>
+<span class="dim">2025-01-15 10:23:42 [INFO      ] Ürün bulundu! güven=89%  hata_x=+0.34</span><br>
+<span class="info">2025-01-15 10:23:42 [INFO      ] Durum: SEARCHING → CENTERING</span><br>
+<span class="dim">2025-01-15 10:23:42 [INFO      ] Merkezleme: hata=+0.34  düzeltme=+8°  base_servo=98°</span><br>
+<span class="dim">2025-01-15 10:23:43 [INFO      ] Merkezleme: hata=+0.06  düzeltme=+1°  base_servo=99°</span><br>
+<span class="info">2025-01-15 10:23:43 [INFO      ] Durum: CENTERING → APPROACHING</span><br>
+<span class="dim">2025-01-15 10:23:43 [INFO      ] Mesafe: sol=248  sağ=251  ort=249mm  hedef=80mm</span><br>
+<span class="dim">2025-01-15 10:23:44 [INFO      ] İleri: step=15°  elbow=105°</span><br>
+<span class="dim">2025-01-15 10:23:45 [INFO      ] Mesafe: sol=89   sağ=94   ort=91mm   hedef=80mm</span><br>
+<span class="dim">2025-01-15 10:23:46 [INFO      ] Mesafe: sol=81   sağ=80   ort=80mm   hedef=80mm</span><br>
+<span class="info">2025-01-15 10:23:46 [INFO      ] Durum: APPROACHING → ALIGNING</span><br>
+<span class="dim">2025-01-15 10:23:46 [INFO      ] Hizalama hatası: +6mm</span><br>
+<span class="dim">2025-01-15 10:23:47 [INFO      ] Hizalama hatası: +2mm</span><br>
+<span class="info">2025-01-15 10:23:47 [INFO      ] Durum: ALIGNING → GRIPPING</span><br>
+<span class="dim">2025-01-15 10:23:47 [INFO      ] Gripper kapatılıyor...</span><br>
+<span class="ok">2025-01-15 10:23:48 [INFO      ] ══ GÖREV TAMAMLANDI ══</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ BÖLÜM 9 -->
+<div class="page">
+  <div class="section-header">
+    <div class="step-circle sc-red">!</div>
+    <div class="sh-text">
+      <h2>Sorun Giderme</h2>
+      <p>Sık karşılaşılan hatalar ve çözümleri</p>
+    </div>
+  </div>
+
+  <table class="trouble-table">
+    <thead>
+      <tr>
+        <th style="width:35%;">Belirti / Hata</th>
+        <th>Çözüm</th>
+      </tr>
+    </thead>
+    <tr>
+      <td class="symptom">ping pi5.local cevap vermiyor</td>
+      <td class="fix">
+        1. Pi'yi kapat, 30 sn bekle, tekrar aç<br>
+        2. Bilgisayar ve Pi aynı Wi-Fi'da mı? (5GHz/2.4GHz karışımı sorun yaratır)<br>
+        3. OS yazarken Wi-Fi adı/şifre doğru girildi mi?<br>
+        4. Router admin panelinden Pi'nin IP'sini bul
+      </td>
+    </tr>
+    <tr>
+      <td class="symptom">Arduino bulunamadı hatası</td>
+      <td class="fix">
+        <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">ls /dev/ttyACM* /dev/ttyUSB*</code> çalıştır<br>
+        Çıktı yoksa USB kablosu sorunlu veya yanlış port.<br>
+        <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">sudo usermod -aG dialout pi</code> yapıp reboot et
+      </td>
+    </tr>
+    <tr>
+      <td class="symptom">ToF sensör okunmuyor / None geliyor</td>
+      <td class="fix">
+        <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">sudo i2cdetect -y 1</code> — 29 görünüyor mu?<br>
+        Görünmüyorsa SDA/SCL kabloları yanlış pin.<br>
+        I2C etkin mi? <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">sudo raspi-config</code> → Interface Options → I2C
+      </td>
+    </tr>
+    <tr>
+      <td class="symptom">İki ToF sensör görünmüyor, sadece bir 0x29 var</td>
+      <td class="fix">
+        XSHUT kabloları doğru pin'de mi?<br>
+        GPIO17 → Pin 11, GPIO27 → Pin 13 olmalı.<br>
+        Kod çalışınca adresleri 0x30 ve 0x31'e çevirir — önce sadece 0x29 normal.
+      </td>
+    </tr>
+    <tr>
+      <td class="symptom">Kamera görüntüsü gelmiyor</td>
+      <td class="fix">
+        Flex kablo sıkıca takılı mı? Pi'yi kapat, kabloyu çıkar takıştır.<br>
+        CAM/DISP 0 girişi mi kullanıldı?<br>
+        <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">libcamera-hello --list-cameras</code> ne diyor?
+      </td>
+    </tr>
+    <tr>
+      <td class="symptom">Ürün tespit edilmiyor</td>
+      <td class="fix">
+        <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">models/best.rpk</code> dosyası var mı? Model dönüşümü yapıldı mı?<br>
+        Barkod okuma çalışıyor mu? Kutuyu ışıklı ortamda tut.<br>
+        <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">config_robot.py</code>'de TARGET_PRODUCT doğru yazılı mı?
+      </td>
+    </tr>
+    <tr>
+      <td class="symptom">Robot kol beklenmedik şekilde hareket ediyor</td>
+      <td class="fix">
+        <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">config_robot.py</code>'deki SERVO_BASE, SERVO_ELBOW, SERVO_GRIPPER<br>
+        numaraları Arduino kodundaki servo sıralamasıyla eşleşiyor mu?<br>
+        Önce sadece --test modunu kullan, her servo'yu tek tek kontrol et.
+      </td>
+    </tr>
+    <tr>
+      <td class="symptom">Hizalama hiç tamamlanmıyor</td>
+      <td class="fix">
+        <code style="background:#fef2f2;padding:1px 5px;border-radius:3px;font-size:0.75rem;">ALIGNMENT_THRESHOLD_MM</code> değerini artır (5'ten 10'a).<br>
+        Sensörler düzgün monte edilmiş mi? İkisi paralel ve aynı yükseklikte olmalı.
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div">
+
+  <div class="two-col">
+    <div class="card" style="background:#f0fdf4;border-color:#bbf7d0;margin-bottom:0;">
+      <div class="card-title" style="color:#065f46;">Canlı Log Takibi</div>
+      <div class="code-block" style="margin:0;padding:10px 14px;">
+        <span style="color:#38bdf8;">python -m robot.main_controller</span><br>
+        <span style="color:#374151;"># Çıktı terminale canlı akar</span><br>
+        <span style="color:#374151;"># Durdurmak için: Ctrl+C</span>
+      </div>
+    </div>
+    <div class="card" style="background:#fef3c7;border-color:#fde68a;margin-bottom:0;">
+      <div class="card-title" style="color:#92400e;">config_robot.py — Ayar Noktaları</div>
+      <div style="font-size:0.78rem;color:#374151;line-height:1.7;">
+        <code>TARGET_PRODUCT</code> — hangi ürün aransın<br>
+        <code>TARGET_DISTANCE_MM</code> — kaç mm'de tutsun<br>
+        <code>CENTER_THRESHOLD</code> — merkezleme toleransı<br>
+        <code>SERVO_*</code> — servo numaraları
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;padding:18px 22px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;text-align:center;">
+    <div style="font-size:0.9rem;font-weight:700;color:#1f2937;margin-bottom:6px;">Takıldığın yerde geliştirici ile iletişime geç</div>
+    <div style="font-size:0.8rem;color:#6b7280;">Hata mesajının tamamını veya ekran görüntüsünü paylaş.</div>
+    <div style="font-size:0.8rem;color:#6b7280;margin-top:4px;">GitHub: <strong>myusufonur/image-processing</strong></div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+  var msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#1d4ed8;color:white;padding:14px 20px;border-radius:12px;font-family:Inter,sans-serif;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,0.25);z-index:9999;max-width:270px;line-height:1.5;';
+  msg.innerHTML = '<strong style="display:block;margin-bottom:5px;">PDF olarak kaydet</strong>Ctrl+P → "Microsoft Print to PDF" veya "Save as PDF" seç → Kaydet<br><br><small style="opacity:0.75;">Bu kutu PDF\'e yansımaz.</small>';
+  document.body.appendChild(msg);
+  setTimeout(function(){ msg.remove(); }, 12000);
+});
+</script>
+</body>
+</html>

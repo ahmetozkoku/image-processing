@@ -1,0 +1,42 @@
+[Unit]
+Description=İlaç Tanıma Sistemi (Pi 5 + IMX500)
+Documentation=https://github.com/myusufonur/image-processing
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+
+# Proje dizini — Pi'ye kopyalandığı yere göre düzelt
+WorkingDirectory=/home/pi/ilac-tanima/IlacTanima
+
+# venv'deki uvicorn'u kullan
+ExecStart=/home/pi/ilac-tanima/venv/bin/uvicorn \
+    app.main:app \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --workers 1 \
+    --log-level info
+
+# Hata sonrası 5 saniye bekle, tekrar başlat
+Restart=on-failure
+RestartSec=5
+
+# IMX500 için kamera ve GPU erişimi
+SupplementaryGroups=video gpio i2c
+
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+
+# Günlük yönetimi
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ilac-tanima
+
+# Hafıza sınırı (Pi 5 için uygun)
+MemoryMax=2G
+
+[Install]
+WantedBy=multi-user.target

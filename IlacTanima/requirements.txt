@@ -1,0 +1,9 @@
+ultralytics>=8.3.0
+opencv-python>=4.8.0
+PyQt5>=5.15.0
+easyocr>=1.7.0
+pyzbar>=0.1.9
+rapidfuzz>=3.6.0
+requests>=2.31.0
+numpy>=1.24.0
+Pillow>=10.0.0
